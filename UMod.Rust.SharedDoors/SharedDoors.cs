@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Oxide.Plugins
 {
-    [Info("SharedDoors", "dbteku", "0.7.8")]
+    [Info("SharedDoors", "dbteku", "0.7.9")]
     [Description("Making sharing doors easier.")]
     public class SharedDoors : UniversalPlugin
     {
