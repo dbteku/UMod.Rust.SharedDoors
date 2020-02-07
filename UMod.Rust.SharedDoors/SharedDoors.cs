@@ -13,6 +13,7 @@ namespace Oxide.Plugins
     {
         [PluginReference]
         private Plugin Clans;
+
         [PluginReference]
         private Plugin Friends;
 
