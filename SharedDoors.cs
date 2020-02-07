@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Oxide.Plugins
 {
-    [Info("SharedDoors", "dbteku", "1.0.0")]
+    [Info("SharedDoors", "dbteku", "1.0.1")]
     [Description("Making sharing doors easier.")]
     public class SharedDoors : RustPlugin
     {
@@ -17,9 +17,9 @@ namespace Oxide.Plugins
         private Plugin Friends;
 
         private static SharedDoors instance;
-        private const string RUST_IO = "clans";
         private const string CLANS_NAME = "Clans";
-        private const string RUST_CLANS_HOOK = "SharedDoors now hooking to Rust:IO Clans";
+        private const string RUST_CLANS_HOOK = "SharedDoors now hooking to Clans";
+        private const string RUST_CLANS_UNHOOK = "SharedDoors now un-hooking from Clans";
         private const string RUST_CLANS_NOT_FOUND = "Rust Clans has not been found.";
         private const string MASTER_PERM = "shareddoors.master";
         private MasterKeyHolders holders;
@@ -48,7 +48,7 @@ namespace Oxide.Plugins
         {
             if (plugin.Name == CLANS_NAME)
             {
-                Puts(RUST_CLANS_HOOK);
+                Puts(RUST_CLANS_UNHOOK);
                 Clans = plugin;
             }
         }
