@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json.Linq;
+using Oxide.Core.Libraries.Covalence;
+using Oxide.Core.Plugins;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using uMod.Plugins;
-using uMod.Libraries.Universal;
-using System.Linq;
 
 namespace Oxide.Plugins
 {
-    [Info("SharedDoors", "dbteku", "0.7.9")]
+    [Info("SharedDoors", "dbteku", "1.0.0")]
     [Description("Making sharing doors easier.")]
-    public class SharedDoors : UniversalPlugin
+    public class SharedDoors : RustPlugin
     {
         [PluginReference]
         private Plugin Clans;
@@ -63,7 +62,7 @@ namespace Oxide.Plugins
 
         private void OnPlayerInit(BasePlayer player)
         {
-            IPlayer iPlayer = universal.Players.FindPlayerById(player.userID.ToString());
+            IPlayer iPlayer = covalence.Players.FindPlayerById(player.userID.ToString());
             if (player.IsAdmin || iPlayer.HasPermission(MASTER_PERM))
             {
                 holders.AddMaster(player.userID.ToString());
@@ -72,7 +71,7 @@ namespace Oxide.Plugins
 
         private void OnPlayerDisconnected(BasePlayer player, string reason)
         {
-            IPlayer iPlayer = universal.Players.FindPlayerById(player.userID.ToString());
+            IPlayer iPlayer = covalence.Players.FindPlayerById(player.userID.ToString());
             if (player.IsAdmin || iPlayer.HasPermission(MASTER_PERM))
             {
                 holders.RemoveMaster(player.userID.ToString());
@@ -81,17 +80,18 @@ namespace Oxide.Plugins
 
         private bool CanUseLockedEntity(BasePlayer player, BaseLock door)
         {
-            IPlayer iPlayer = universal.Players.FindPlayerById(player.userID.ToString());
+            IPlayer iPlayer = covalence.Players.FindPlayerById(player.userID.ToString());
             bool canUse = false;
             canUse = (player.IsAdmin && holders.IsAKeyMaster(player.userID.ToString()))
             || (iPlayer.HasPermission(MASTER_PERM) && holders.IsAKeyMaster(player.userID.ToString()))
             || new DoorAuthorizer(door, player).CanOpen();
             return canUse;
         }
-
-        [Command("sd")]
-        private void SharedDoorsCommand(IPlayer player, string command, string[] args)
+        #region Commands
+        [ChatCommand("sd")]
+        private void SharedDoorsCommand(BasePlayer basePlayer, string command, string[] args)
         {
+            IPlayer player = covalence.Players.FindPlayerById(basePlayer.userID.ToString());
             if (args.Length > 0)
             {
                 if (args[0].ToLower() == "help")
@@ -132,6 +132,7 @@ namespace Oxide.Plugins
                 PlayerResponder.NotifyUser(player, "Master Mode Toggle: /sd masterMode");
             }
         }
+        #endregion
 
         public static SharedDoors getInstance()
         {
@@ -140,11 +141,11 @@ namespace Oxide.Plugins
 
         private class PlayerResponder
         {
-            private const String PREFIX = "<color=#00ffffff>[</color><color=#ff0000ff>SharedDoors</color><color=#00ffffff>]</color>";
+            private const string PREFIX = "<color=#00ffffff>[</color><color=#ff0000ff>SharedDoors</color><color=#00ffffff>]</color>";
 
             public static void NotifyUser(IPlayer player, String message)
             {
-                player.Message(PREFIX + " " + message);
+                player.Message(message, PREFIX);
             }
         }
 
@@ -203,7 +204,7 @@ namespace Oxide.Plugins
                     canUse = (player.CanBuild() && checker.IsPlayerAuthorized());
                     if (canUse && handler.ClansAvailable())
                     {
-                        canUse = handler.IsInClan(player);
+                        canUse = handler.IsInClan(player.UserIDString, door.OwnerID.ToString());
                     }
                 }
 
@@ -213,11 +214,10 @@ namespace Oxide.Plugins
 
             private bool CanOpenKeyLock(KeyLock door, BasePlayer player)
             {
-                bool canUse = false;
-
-                canUse = door.HasLockPermission(player) || (player.CanBuild() && checker.IsPlayerAuthorized());
-
-                return canUse;
+                return door.HasLockPermission(player) 
+                || (player.CanBuild() 
+                    && checker.IsPlayerAuthorized() 
+                    && handler.IsInClan(player.UserIDString, door.OwnerID.ToString()));
             }
 
             private void PlaySound(bool canUse, CodeLock door, BasePlayer player)
@@ -263,7 +263,7 @@ namespace Oxide.Plugins
         private class RustIOHandler
         {
             private const string GET_CLAN_OF_PLAYER = "GetClanOf";
-            private const string GET_CLAN = "GetClan";
+            private const string IS_CLAN_MEMBER = "IsClanMember";
             private const string MEMBERS = "members";
             public Plugin Clans { get; protected set; }
             public ulong OriginalPlayerID { get; protected set; }
@@ -288,23 +288,15 @@ namespace Oxide.Plugins
                 this.Clans = SharedDoors.getInstance().Clans;
             }
 
-            public bool IsInClan(BasePlayer player)
+            public bool IsInClan(string playerId, string playerDoorOwner)
             {
                 bool isInClan = false;
                 if (ClansAvailable())
                 {
-                    object obj = Clans.CallHook(GET_CLAN_OF_PLAYER, new object[] { OriginalPlayerID });
-                    if (obj != null)
+                    string clanName = Clans.Call<string>(GET_CLAN_OF_PLAYER, playerId);
+                    if (!string.IsNullOrWhiteSpace(clanName))
                     {
-                        String clanName = obj.ToString();
-                        object clan = Clans.CallHook(GET_CLAN, new object[] { clanName });
-                        if (clan != null)
-                        {
-                            JObject jObject = JObject.FromObject(clan);
-                            JArray members = (JArray)jObject.GetValue(MEMBERS);
-                            string[] memberIds = members.ToObject<string[]>();
-                            isInClan = (memberIds.Contains(player.userID.ToString()));
-                        }
+                        isInClan = Clans.Call<bool>(IS_CLAN_MEMBER, playerDoorOwner, playerId);
                     }
                 }
 
@@ -313,7 +305,7 @@ namespace Oxide.Plugins
 
             public bool ClansAvailable()
             {
-                return this.Clans != null;
+                return this.Clans != null && Clans.IsLoaded;
             }
         }
 

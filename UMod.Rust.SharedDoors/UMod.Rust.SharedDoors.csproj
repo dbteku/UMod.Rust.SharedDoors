@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Libraries\umod.Rust\src\uMod.Rust.csproj" />
+    <ProjectReference Include="..\..\..\..\Libraries\Oxide\Oxide.Rust\src\Oxide.Rust.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,9 +54,6 @@
     <Reference Include="NewAssembly">
       <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\NewAssembly.dll</HintPath>
     </Reference>
-    <Reference Include="Oxide.References">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Oxide.References.dll</HintPath>
-    </Reference>
     <Reference Include="Rust.Data">
       <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Rust.Data.dll</HintPath>
     </Reference>
@@ -65,15 +62,6 @@
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\System.dll</HintPath>
-    </Reference>
-    <Reference Include="uMod">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\uMod.dll</HintPath>
-    </Reference>
-    <Reference Include="uMod.Rust">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\uMod.Rust.dll</HintPath>
-    </Reference>
-    <Reference Include="uMod.Unity">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\uMod.Unity.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\UnityEngine.dll</HintPath>
