@@ -13,6 +13,8 @@ namespace Oxide.Plugins
     {
         [PluginReference]
         private Plugin Clans;
+        [PluginReference]
+        private Plugin Friends;
 
         private static SharedDoors instance;
         private const string RUST_IO = "clans";
@@ -204,7 +206,7 @@ namespace Oxide.Plugins
                     canUse = (player.CanBuild() && checker.IsPlayerAuthorized());
                     if (canUse && handler.ClansAvailable())
                     {
-                        canUse = handler.IsInClan(player.UserIDString, door.OwnerID.ToString());
+                        canUse = handler.IsInClan(player.UserIDString, door.OwnerID.ToString()) || handler.IsFriend(player.UserIDString, door.OwnerID.ToString());
                     }
                 }
 
@@ -217,7 +219,7 @@ namespace Oxide.Plugins
                 return door.HasLockPermission(player) 
                 || (player.CanBuild() 
                     && checker.IsPlayerAuthorized() 
-                    && handler.IsInClan(player.UserIDString, door.OwnerID.ToString()));
+                    && (handler.IsInClan(player.UserIDString, door.OwnerID.ToString()) || handler.IsFriend(player.UserIDString, door.OwnerID.ToString())));
             }
 
             private void PlaySound(bool canUse, CodeLock door, BasePlayer player)
@@ -264,8 +266,8 @@ namespace Oxide.Plugins
         {
             private const string GET_CLAN_OF_PLAYER = "GetClanOf";
             private const string IS_CLAN_MEMBER = "IsClanMember";
-            private const string MEMBERS = "members";
             public Plugin Clans { get; protected set; }
+            public Plugin Friends { get; protected set; }
             public ulong OriginalPlayerID { get; protected set; }
             public DoorAuthorizer Door { get; protected set; }
 
@@ -286,6 +288,7 @@ namespace Oxide.Plugins
                 }
                 this.Door = door;
                 this.Clans = SharedDoors.getInstance().Clans;
+                this.Friends = SharedDoors.getInstance().Friends;
             }
 
             public bool IsInClan(string playerId, string playerDoorOwner)
@@ -301,6 +304,11 @@ namespace Oxide.Plugins
                 }
 
                 return isInClan;
+            }
+
+            public bool IsFriend(string playerId, string playerDoorOwner)
+            {
+                return Friends.IsLoaded && Friends.Call<bool>("IsFriend", playerId, playerDoorOwner);
             }
 
             public bool ClansAvailable()
