@@ -2,6 +2,8 @@ Sharing doors is just as simple as authorizing yourself on a tool cupboard.
 
 RustIO Clans support.
 
+For help go to our discord [here](https://bit.ly/3bwBz8W)
+
 ## Commands
 
 /sd - Shows commands.
