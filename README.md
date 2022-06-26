@@ -2,6 +2,8 @@ Sharing doors is just as simple as authorizing yourself on a tool cupboard.
 
 RustIO Clans support.
 
+Github Repository: [UMod.Rust.SharedDoors](https://github.com/dbteku/UMod.Rust.SharedDoors)
+
 For help go to our discord [here](https://bit.ly/3bwBz8W)
 
 ## Commands
