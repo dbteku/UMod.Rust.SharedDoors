@@ -23,6 +23,7 @@ namespace Oxide.Plugins
         private const string CLANS_AUTHOR_NAME = "k1lly0u";
         private const string FRIENDS_NAME = "Friends";
         private const string FRIENDS_AUTHOR_NAME = "MrBlue";
+        private const string FRIENDS_AUTHOR_NAME_ALTERNATE = "Wulf";
         private const string RUST_CLANS_HOOK = "SharedDoors now hooking to Clans by k1lly0u";
         private const string RUST_CLANS_UNHOOK = "SharedDoors now un-hooking from Clans";
         private const string RUST_FRIENDS_HOOK = "SharedDoors now hooking to Friends by MrBlue";
@@ -77,7 +78,7 @@ namespace Oxide.Plugins
             }
             if(plugin.Name == FRIENDS_NAME)
             {
-                if (plugin.Author == FRIENDS_AUTHOR_NAME)
+                if (plugin.Author == FRIENDS_AUTHOR_NAME || plugin.Author == FRIENDS_AUTHOR_NAME_ALTERNATE)
                 {
                     Puts(RUST_FRIENDS_HOOK);
                     Friends = plugin;
@@ -92,7 +93,7 @@ namespace Oxide.Plugins
                 Puts(RUST_CLANS_UNHOOK);
                 Clans = null;
             }
-            if(plugin.Name == FRIENDS_NAME && plugin.Author == FRIENDS_AUTHOR_NAME)
+            if(plugin.Name == FRIENDS_NAME && (plugin.Author == FRIENDS_AUTHOR_NAME || plugin.Author == FRIENDS_AUTHOR_NAME_ALTERNATE))
             {
                 Puts(RUST_FRIENDS_UNHOOK);
                 Friends = null;
