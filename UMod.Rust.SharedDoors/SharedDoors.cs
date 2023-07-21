@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Oxide.Plugins
 {
-    [Info("SharedDoors", "dbteku", "2.0.0")]
+    [Info("SharedDoors", "dbteku", "2.0.1")]
     [Description("Making sharing doors easier.")]
     public class SharedDoors : RustPlugin
     {
@@ -89,7 +89,7 @@ namespace Oxide.Plugins
         {
             if (plugin.Name == CLANS_NAME && plugin.Author == CLANS_AUTHOR_NAME)
             {
-                Puts(RUST_CLANS_HOOK);
+                Puts(RUST_CLANS_UNHOOK);
                 Clans = null;
             }
             if(plugin.Name == FRIENDS_NAME && plugin.Author == FRIENDS_AUTHOR_NAME)
