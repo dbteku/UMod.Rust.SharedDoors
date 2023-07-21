@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Oxide.Core.Libraries;
 using Oxide.Core.Libraries.Covalence;
 using Oxide.Core.Plugins;
 using System;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Oxide.Plugins
 {
-    [Info("SharedDoors", "dbteku", "1.0.1")]
+    [Info("SharedDoors", "dbteku", "2.0.0")]
     [Description("Making sharing doors easier.")]
     public class SharedDoors : RustPlugin
     {
@@ -19,9 +20,16 @@ namespace Oxide.Plugins
 
         private static SharedDoors instance;
         private const string CLANS_NAME = "Clans";
-        private const string RUST_CLANS_HOOK = "SharedDoors now hooking to Clans";
+        private const string CLANS_AUTHOR_NAME = "k1lly0u";
+        private const string FRIENDS_NAME = "Friends";
+        private const string FRIENDS_AUTHOR_NAME = "MrBlue";
+        private const string RUST_CLANS_HOOK = "SharedDoors now hooking to Clans by k1lly0u";
         private const string RUST_CLANS_UNHOOK = "SharedDoors now un-hooking from Clans";
-        private const string RUST_CLANS_NOT_FOUND = "Rust Clans has not been found.";
+        private const string RUST_FRIENDS_HOOK = "SharedDoors now hooking to Friends by MrBlue";
+        private const string RUST_FRIENDS_UNHOOK = "SharedDoors now unhooking from Friends.";
+        private const string RUST_CLANS_NOT_FOUND = "Rust Clans by k1lly0u has not been found.";
+        private const string RUST_FRIENDS_NOT_FOUND = "Rust Friends by MrBlue has not been found.";
+        private const string WRONG_CLANS_PLUGIN = "You are using the wrong Clans plugin. Please use the Clans by the author: k1lly0u.";
         private const string MASTER_PERM = "shareddoors.master";
         private MasterKeyHolders holders;
 
@@ -38,6 +46,14 @@ namespace Oxide.Plugins
             {
                 Puts(RUST_CLANS_HOOK);
             }
+            if(Friends == null)
+            {
+                Puts(RUST_FRIENDS_NOT_FOUND);
+            }
+            else
+            {
+                Puts(RUST_FRIENDS_HOOK);
+            }
         }
 
         private void Unload()
@@ -49,17 +65,37 @@ namespace Oxide.Plugins
         {
             if (plugin.Name == CLANS_NAME)
             {
-                Puts(RUST_CLANS_UNHOOK);
-                Clans = plugin;
+                if(plugin.Author == CLANS_AUTHOR_NAME)
+                {
+                    Puts(RUST_CLANS_HOOK);
+                    Clans = plugin;
+                }
+                else
+                {
+                    Puts(WRONG_CLANS_PLUGIN);
+                }
+            }
+            if(plugin.Name == FRIENDS_NAME)
+            {
+                if (plugin.Author == FRIENDS_AUTHOR_NAME)
+                {
+                    Puts(RUST_FRIENDS_HOOK);
+                    Friends = plugin;
+                }
             }
         }
 
-        private void OnPluginUnloaded(Plugin name)
+        private void OnPluginUnloaded(Plugin plugin)
         {
-            if (name.Name == CLANS_NAME)
+            if (plugin.Name == CLANS_NAME && plugin.Author == CLANS_AUTHOR_NAME)
             {
                 Puts(RUST_CLANS_HOOK);
                 Clans = null;
+            }
+            if(plugin.Name == FRIENDS_NAME && plugin.Author == FRIENDS_AUTHOR_NAME)
+            {
+                Puts(RUST_FRIENDS_UNHOOK);
+                Friends = null;
             }
         }
 
@@ -163,14 +199,14 @@ namespace Oxide.Plugins
             public BaseLock BaseDoor { get; protected set; }
             public BasePlayer Player { get; protected set; }
             private ToolCupboardChecker checker;
-            private RustIOHandler handler;
+            private FriendsClansHandler handler;
 
             public DoorAuthorizer(BaseLock door, BasePlayer player)
             {
                 this.BaseDoor = door;
                 this.Player = player;
                 checker = new ToolCupboardChecker(Player);
-                handler = new RustIOHandler(this);
+                handler = new FriendsClansHandler(this);
             }
 
             public bool CanOpen()
@@ -204,10 +240,20 @@ namespace Oxide.Plugins
 
                 if (!canUse)
                 {
-                    canUse = (player.CanBuild() && checker.IsPlayerAuthorized());
-                    if (canUse && handler.ClansAvailable())
+                    bool isAuthorizedByTC = (player.CanBuild() && checker.IsPlayerAuthorized());
+                    bool solution = canUse;
+                    if (isAuthorizedByTC && !solution && handler.ClansAvailable())
                     {
-                        canUse = handler.IsInClan(player.UserIDString, door.OwnerID.ToString()) || handler.IsFriend(player.UserIDString, door.OwnerID.ToString());
+                        canUse = handler.IsInClan(player.UserIDString, door.OwnerID.ToString());
+                        solution = canUse;
+                    }
+                    if(isAuthorizedByTC && !solution && handler.FriendsAvailable())
+                    {
+                        canUse = handler.IsFriend(player.UserIDString, door.OwnerID.ToString());
+                    }
+                    if (!handler.FriendsAvailable() && !handler.ClansAvailable())
+                    {
+                        canUse = isAuthorizedByTC;
                     }
                 }
 
@@ -217,10 +263,27 @@ namespace Oxide.Plugins
 
             private bool CanOpenKeyLock(KeyLock door, BasePlayer player)
             {
-                return door.HasLockPermission(player) 
-                || (player.CanBuild() 
-                    && checker.IsPlayerAuthorized() 
-                    && (handler.IsInClan(player.UserIDString, door.OwnerID.ToString()) || handler.IsFriend(player.UserIDString, door.OwnerID.ToString())));
+                bool canUse = door.HasLockPermission(player);
+
+                if (!canUse)
+                {
+                    bool isAuthorizedByTC = (player.CanBuild() && checker.IsPlayerAuthorized());
+                    bool solution = canUse;
+                    if (isAuthorizedByTC && !solution && handler.ClansAvailable())
+                    {
+                        canUse = handler.IsInClan(player.UserIDString, door.OwnerID.ToString());
+                        solution = canUse;
+                    }
+                    if (isAuthorizedByTC && !solution && handler.FriendsAvailable())
+                    {
+                        canUse = handler.IsFriend(player.UserIDString, door.OwnerID.ToString());
+                    }
+                    if(!handler.FriendsAvailable() && !handler.ClansAvailable())
+                    {
+                        canUse = isAuthorizedByTC;
+                    }
+                }
+                return canUse;
             }
 
             private void PlaySound(bool canUse, CodeLock door, BasePlayer player)
@@ -263,7 +326,7 @@ namespace Oxide.Plugins
          *
          * */
 
-        private class RustIOHandler
+        private class FriendsClansHandler
         {
             private const string GET_CLAN_OF_PLAYER = "GetClanOf";
             private const string IS_CLAN_MEMBER = "IsClanMember";
@@ -272,7 +335,7 @@ namespace Oxide.Plugins
             public ulong OriginalPlayerID { get; protected set; }
             public DoorAuthorizer Door { get; protected set; }
 
-            public RustIOHandler(DoorAuthorizer door)
+            public FriendsClansHandler(DoorAuthorizer door)
             {
                 if (door.BaseDoor is CodeLock)
                 {
@@ -315,6 +378,10 @@ namespace Oxide.Plugins
             public bool ClansAvailable()
             {
                 return this.Clans != null && Clans.IsLoaded;
+            }
+            public bool FriendsAvailable()
+            {
+                return this.Friends != null && Friends.IsLoaded;
             }
         }
 
