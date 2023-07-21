@@ -1,85 +1,66 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Libraries\Oxide\Oxide.Rust\src\Oxide.Rust.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.Console">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.Console.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Facepunch.Console.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.Network">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.Network.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Facepunch.Network.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.Rcon">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.Rcon.dll</HintPath>
-    </Reference>
-    <Reference Include="Facepunch.Steamworks">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.Steamworks.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Facepunch.Rcon.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.System">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.System.dll</HintPath>
-    </Reference>
-    <Reference Include="Facepunch.Unity">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.Unity.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Facepunch.System.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.UnityEngine">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Facepunch.UnityEngine.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Facepunch.UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Mono.Cecil.dll</HintPath>
+    <Reference Include="Mono.Data.Tds">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Mono.Data.Tds.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Mono.Cecil.Mdb.dll</HintPath>
+    <Reference Include="Oxide.Core">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Mono.Cecil.Pdb.dll</HintPath>
+    <Reference Include="Oxide.CSharp">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Mono.Cecil.Rocks.dll</HintPath>
+    <Reference Include="Oxide.MySql">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.MySql.dll</HintPath>
     </Reference>
-    <Reference Include="mscorlib">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\mscorlib.dll</HintPath>
+    <Reference Include="Oxide.References">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.References.dll</HintPath>
     </Reference>
-    <Reference Include="NewAssembly">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\NewAssembly.dll</HintPath>
+    <Reference Include="Oxide.Rust">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.Rust.dll</HintPath>
     </Reference>
-    <Reference Include="Rust.Data">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Rust.Data.dll</HintPath>
+    <Reference Include="Oxide.SQLite">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Oxide.Unity">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Oxide.Unity.dll</HintPath>
     </Reference>
     <Reference Include="Rust.Global">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\Rust.Global.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Rust.Global.dll</HintPath>
     </Reference>
-    <Reference Include="System">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\System.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\UnityEngine.dll</HintPath>
+    <Reference Include="Rust.Localization">
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\Rust.Localization.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>..\..\..\..\Libraries\umod.Rust\src\bin\Debug\net46\websocket-sharp.dll</HintPath>
+      <HintPath>E:\Servers\Rust\RustDedicated_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 
